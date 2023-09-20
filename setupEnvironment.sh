@@ -1,6 +1,5 @@
 # Step One- Fill out the CAPSTONE_REPO_NAME and GITHUB_GROUP_NAME in all LOWERCASE.
-charactermodificationprogramlbc
-bugbusterslbc
+
 # Step Two - configure your shell to always have these variables.
 # For OSX / Linux
 # Copy and paste ALL of the properties below into your .bash_profile in your home directly
