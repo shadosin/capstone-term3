@@ -1,5 +1,6 @@
 package com.kenzie.appserver.service;
 
+import com.kenzie.appserver.repositories.CharacterRepository;
 import com.kenzie.appserver.repositories.model.ExampleRecord;
 import com.kenzie.appserver.repositories.ExampleRepository;
 import com.kenzie.appserver.service.model.Example;
@@ -8,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ExampleService {
-    private ExampleRepository exampleRepository;
+    private CharacterRepository characterRepository;
 
-    public ExampleService(ExampleRepository exampleRepository) {
+    public ExampleService(CharacterRepository CharacterRepository) {
         this.exampleRepository = exampleRepository;
     }
 
