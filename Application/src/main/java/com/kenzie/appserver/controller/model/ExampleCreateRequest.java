@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotEmpty;
 
-public class ExampleCreateRequest {
+public class createCharacterRequest {
 
     @NotEmpty
-    @JsonProperty("name")
+    @JsonProperty("character_name")
     private String name;
 
     public String getName() {
