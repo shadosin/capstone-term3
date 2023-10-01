@@ -1,5 +1,6 @@
 package com.kenzie.appserver.service;
 
+import com.kenzie.appserver.repositories.CharacterRepository;
 import com.kenzie.appserver.repositories.model.ExampleRecord;
 import com.kenzie.appserver.repositories.ExampleRepository;
 import com.kenzie.appserver.service.model.Example;
@@ -7,11 +8,11 @@ import com.kenzie.appserver.service.model.Example;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ExampleService {
-    private ExampleRepository exampleRepository;
+public class CharacterService {
+    private CharacterRepository characterRepository;
 
-    public ExampleService(ExampleRepository exampleRepository) {
-        this.exampleRepository = exampleRepository;
+    public CharacterService(CharacterRepository characterRepository) {
+        this.characterRepository = characterRepository;
     }
 
     public Example findById(String id) {
@@ -22,7 +23,6 @@ public class ExampleService {
 
         return exampleFromBackend;
     }
-
     public Example addNewExample(Example example) {
         ExampleRecord exampleRecord = new ExampleRecord();
         exampleRecord.setId(example.getId());
