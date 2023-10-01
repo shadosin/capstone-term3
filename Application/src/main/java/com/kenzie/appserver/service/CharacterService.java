@@ -8,11 +8,11 @@ import com.kenzie.appserver.service.model.Example;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ExampleService {
+public class CharacterService {
     private CharacterRepository characterRepository;
 
-    public ExampleService(CharacterRepository CharacterRepository) {
-        this.exampleRepository = exampleRepository;
+    public CharacterService(CharacterRepository characterRepository) {
+        this.characterRepository = characterRepository;
     }
 
     public Example findById(String id) {
@@ -23,7 +23,6 @@ public class ExampleService {
 
         return exampleFromBackend;
     }
-
     public Example addNewExample(Example example) {
         ExampleRecord exampleRecord = new ExampleRecord();
         exampleRecord.setId(example.getId());
