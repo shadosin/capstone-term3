@@ -13,15 +13,14 @@ public class CharacterService {
     }
 
     public Character findByName(String character_name) {
-        Character characterFromBackend = characterRepository
+
+        return characterRepository
                 .findById(character_name)
                 .map(character -> new Character(character.getCharacter_name(), character.getStrength(),
                                                 character.getDexterity(), character.getSocial(),
                                                 character.getMagic(), character.getMana(),
                                                 character.getHealthPoints()))
                 .orElse(null);
-
-        return characterFromBackend;
     }
     public Character addNewCharacter(Character character) {
 
@@ -34,5 +33,8 @@ public class CharacterService {
         characterRecord.setStrength(character.getStrength());
         characterRepository.save(characterRecord);
         return character;
+    }
+    public void deleteCharacter(String character_name){
+        characterRepository.deleteById(character_name);
     }
 }
