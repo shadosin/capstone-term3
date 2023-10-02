@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @IntegrationTest
-class CharacterControllerTest {
+class ExampleControllerTest {
     @Autowired
     private MockMvc mvc;
 

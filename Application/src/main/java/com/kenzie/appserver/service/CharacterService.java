@@ -1,10 +1,7 @@
 package com.kenzie.appserver.service;
-
 import com.kenzie.appserver.repositories.CharacterRepository;
-import com.kenzie.appserver.repositories.model.ExampleRecord;
-import com.kenzie.appserver.repositories.ExampleRepository;
-import com.kenzie.appserver.service.model.Example;
-
+import com.kenzie.appserver.repositories.model.CharacterRecord;
+import com.kenzie.appserver.service.model.Character;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,19 +12,27 @@ public class CharacterService {
         this.characterRepository = characterRepository;
     }
 
-    public Example findById(String id) {
-        Example exampleFromBackend = exampleRepository
-                .findById(id)
-                .map(example -> new Example(example.getId(), example.getName()))
+    public Character findByName(String character_name) {
+        Character characterFromBackend = characterRepository
+                .findById(character_name)
+                .map(character -> new Character(character.getCharacter_name(), character.getStrength(),
+                                                character.getDexterity(), character.getSocial(),
+                                                character.getMagic(), character.getMana(),
+                                                character.getHealthPoints()))
                 .orElse(null);
 
-        return exampleFromBackend;
+        return characterFromBackend;
     }
-    public Example addNewExample(Example example) {
-        ExampleRecord exampleRecord = new ExampleRecord();
-        exampleRecord.setId(example.getId());
-        exampleRecord.setName(example.getName());
-        exampleRepository.save(exampleRecord);
-        return example;
+    public Character addNewCharacter(Character character) {
+
+        CharacterRecord characterRecord = new CharacterRecord();
+        characterRecord.setCharacter_name(character.getCharacter_name());
+        characterRecord.setDexterity(character.getDexterity());
+        characterRecord.setMagic(character.getMagic());
+        characterRecord.setMana(character.getMana());
+        characterRecord.setSocial(character.getSocial());
+        characterRecord.setStrength(character.getStrength());
+        characterRepository.save(characterRecord);
+        return character;
     }
 }
