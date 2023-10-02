@@ -15,6 +15,8 @@ public class CharacterRecord {
     private int social;
     private int magic;
     private int mana;
+    private int healthPoints;
+
 
 
     @DynamoDBHashKey(attributeName = "character_name")
@@ -65,6 +67,14 @@ public class CharacterRecord {
     public void setMana(int mana) {
         this.mana = mana;
     }
+    @DynamoDBAttribute(attributeName = "healthPoints")
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
+    public void setHealthPoints(int healthPoints) {
+        this.healthPoints = healthPoints;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -82,4 +92,6 @@ public class CharacterRecord {
     public int hashCode() {
         return Objects.hash(character_name);
     }
+
+
 }
