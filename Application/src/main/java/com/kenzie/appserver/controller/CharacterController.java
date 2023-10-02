@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.UUID.randomUUID;
 
@@ -34,15 +36,20 @@ public class CharacterController {
             return ResponseEntity.notFound().build();
         }
 
-        CharacterResponse characterResponse = new CharacterResponse();
-        characterResponse.setCharacter_name(character.getCharacter_name());
-        characterResponse.setDexterity(character.getDexterity());
-        characterResponse.setStrength(character.getStrength());
-        characterResponse.setHealthPoints(character.getHealthPoints());
-        characterResponse.setMagic(character.getMagic());
-        characterResponse.setMana(character.getMana());
-        characterResponse.setSocial(character.getSocial());
+        CharacterResponse characterResponse = createCharacterResponse(character);
         return ResponseEntity.ok(characterResponse);
+    }
+    @GetMapping
+    public ResponseEntity<List<CharacterResponse>> getAllCharacters(){
+        List<Character> characters = characterService.findAllCharacters();
+        if(characters == null || characters.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        List<CharacterResponse> responses = new ArrayList<>();
+        for(Character character : characters){
+            responses.add(this.createCharacterResponse(character));
+        }
+        return ResponseEntity.ok(responses);
     }
     @PutMapping
     public ResponseEntity<CharacterResponse> updateCharacter(@RequestBody CharacterUpdateRequest characterUpdateRequest){
@@ -52,14 +59,7 @@ public class CharacterController {
                 characterUpdateRequest.getHealthPoints());
         characterService.updateCharacter(character);
 
-        CharacterResponse characterResponse = new CharacterResponse();
-        characterResponse.setCharacter_name(character.getCharacter_name());
-        characterResponse.setDexterity(character.getDexterity());
-        characterResponse.setStrength(character.getStrength());
-        characterResponse.setHealthPoints(character.getHealthPoints());
-        characterResponse.setMagic(character.getMagic());
-        characterResponse.setMana(character.getMana());
-        characterResponse.setSocial(character.getSocial());
+        CharacterResponse characterResponse = createCharacterResponse(character);
         return ResponseEntity.ok(characterResponse);
     }
 
@@ -79,5 +79,17 @@ public class CharacterController {
     public ResponseEntity deleteCharacterByName(@PathVariable("character_name") String character_name){
         characterService.deleteCharacter(character_name);
         return ResponseEntity.noContent().build();
+    }
+
+    private CharacterResponse createCharacterResponse(Character character){
+        CharacterResponse characterResponse = new CharacterResponse();
+        characterResponse.setCharacter_name(character.getCharacter_name());
+        characterResponse.setDexterity(character.getDexterity());
+        characterResponse.setStrength(character.getStrength());
+        characterResponse.setHealthPoints(character.getHealthPoints());
+        characterResponse.setMagic(character.getMagic());
+        characterResponse.setMana(character.getMana());
+        characterResponse.setSocial(character.getSocial());
+        return characterResponse;
     }
 }

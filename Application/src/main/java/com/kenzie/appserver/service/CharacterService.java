@@ -6,6 +6,9 @@ import com.kenzie.appserver.service.model.Character;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CharacterService {
     private CharacterRepository characterRepository;
@@ -23,6 +26,18 @@ public class CharacterService {
                                                 character.getMagic(), character.getMana(),
                                                 character.getHealthPoints()))
                 .orElse(null);
+    }
+
+    public List<Character> findAllCharacters(){
+        List<Character> characters = new ArrayList<>();
+
+        Iterable<CharacterRecord> characterIterator = characterRepository.findAll();
+        for(CharacterRecord record: characterIterator){
+            characters.add(new Character(record.getCharacter_name(),
+                    record.getStrength(), record.getDexterity(), record.getSocial(), record.getMagic(),
+                    record.getMana(), record.getHealthPoints()));
+        }
+        return characters;
     }
     public Character addNewCharacter(Character character) {
 
