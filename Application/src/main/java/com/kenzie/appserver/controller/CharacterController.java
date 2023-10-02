@@ -1,14 +1,14 @@
 package com.kenzie.appserver.controller;
 
+import com.kenzie.appserver.controller.model.CharacterCreateRequest;
 import com.kenzie.appserver.controller.model.CharacterResponse;
 import com.kenzie.appserver.controller.model.CharacterUpdateRequest;
-import com.kenzie.appserver.controller.model.ExampleCreateRequest;
-import com.kenzie.appserver.controller.model.ExampleResponse;
+
 import com.kenzie.appserver.service.CharacterService;
-import com.kenzie.appserver.service.ExampleService;
+
 
 import com.kenzie.appserver.service.model.Character;
-import com.kenzie.appserver.service.model.Example;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,16 +64,19 @@ public class CharacterController {
     }
 
     @PostMapping
-    public ResponseEntity<CharacterResponse> addNewConcert(@RequestBody  exampleCreateRequest) {
-        Example example = new Example(randomUUID().toString(),
-                exampleCreateRequest.getName());
-        exampleService.addNewExample(example);
+    public ResponseEntity<CharacterResponse> addNewCharacter(@RequestBody CharacterCreateRequest characterCreateRequest) {
+        Character character = new Character(characterCreateRequest.getCharacter_name(),
+                characterCreateRequest.getStrength(),
+                characterCreateRequest.getDexterity(),
+                characterCreateRequest.getSocial(),
+                characterCreateRequest.getMagic(),
+                characterCreateRequest.getMana(),
+                characterCreateRequest.getHealthPoints());
+        characterService.addNewCharacter(character);
 
-        ExampleResponse exampleResponse = new ExampleResponse();
-        exampleResponse.setId(example.getId());
-        exampleResponse.setName(example.getName());
+        CharacterResponse characterResponse = createCharacterResponse(character);
 
-        return ResponseEntity.created(URI.create("/example/" + exampleResponse.getId())).body(exampleResponse);
+        return ResponseEntity.created(URI.create("/character/" + characterResponse.getCharacter_name())).body(characterResponse);
     }
     @DeleteMapping("/{character_name}")
     public ResponseEntity deleteCharacterByName(@PathVariable("character_name") String character_name){
