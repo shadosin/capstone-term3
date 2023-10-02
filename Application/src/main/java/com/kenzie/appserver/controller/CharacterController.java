@@ -1,6 +1,7 @@
 package com.kenzie.appserver.controller;
 
 import com.kenzie.appserver.controller.model.CharacterResponse;
+import com.kenzie.appserver.controller.model.CharacterUpdateRequest;
 import com.kenzie.appserver.controller.model.ExampleCreateRequest;
 import com.kenzie.appserver.controller.model.ExampleResponse;
 import com.kenzie.appserver.service.CharacterService;
@@ -26,12 +27,30 @@ public class CharacterController {
     }
 
     @GetMapping("/{character_name}")
-    public ResponseEntity<CharacterResponse> get(@PathVariable("character_name") String character_name) {
+    public ResponseEntity<CharacterResponse> getCharacter(@PathVariable("character_name") String character_name) {
 
         Character character = characterService.findByName(character_name);
         if (character == null) {
             return ResponseEntity.notFound().build();
         }
+
+        CharacterResponse characterResponse = new CharacterResponse();
+        characterResponse.setCharacter_name(character.getCharacter_name());
+        characterResponse.setDexterity(character.getDexterity());
+        characterResponse.setStrength(character.getStrength());
+        characterResponse.setHealthPoints(character.getHealthPoints());
+        characterResponse.setMagic(character.getMagic());
+        characterResponse.setMana(character.getMana());
+        characterResponse.setSocial(character.getSocial());
+        return ResponseEntity.ok(characterResponse);
+    }
+    @PutMapping
+    public ResponseEntity<CharacterResponse> updateCharacter(@RequestBody CharacterUpdateRequest characterUpdateRequest){
+        Character character = new Character(characterUpdateRequest.getCharacter_name(),
+                characterUpdateRequest.getStrength(), characterUpdateRequest.getDexterity(),
+                characterUpdateRequest.getMagic(), characterUpdateRequest.getMana(), characterUpdateRequest.getSocial(),
+                characterUpdateRequest.getHealthPoints());
+        characterService.updateCharacter(character);
 
         CharacterResponse characterResponse = new CharacterResponse();
         characterResponse.setCharacter_name(character.getCharacter_name());
@@ -59,6 +78,6 @@ public class CharacterController {
     @DeleteMapping("/{character_name}")
     public ResponseEntity deleteCharacterByName(@PathVariable("character_name") String character_name){
         characterService.deleteCharacter(character_name);
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.noContent().build();
     }
 }

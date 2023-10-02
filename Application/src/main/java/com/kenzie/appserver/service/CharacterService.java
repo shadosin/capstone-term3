@@ -1,7 +1,9 @@
 package com.kenzie.appserver.service;
+import com.kenzie.appserver.controller.model.CharacterResponse;
 import com.kenzie.appserver.repositories.CharacterRepository;
 import com.kenzie.appserver.repositories.model.CharacterRecord;
 import com.kenzie.appserver.service.model.Character;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +35,21 @@ public class CharacterService {
         characterRecord.setStrength(character.getStrength());
         characterRepository.save(characterRecord);
         return character;
+    }
+
+    public void updateCharacter(Character character){
+        if(characterRepository.existsById(character.getCharacter_name())){
+            CharacterRecord characterRecord = new CharacterRecord();
+            characterRecord.setCharacter_name(character.getCharacter_name());
+            characterRecord.setDexterity(character.getDexterity());
+            characterRecord.setStrength(character.getStrength());
+            characterRecord.setHealthPoints(character.getHealthPoints());
+            characterRecord.setMagic(character.getMagic());
+            characterRecord.setMana(character.getMana());
+            characterRecord.setSocial(character.getSocial());
+            characterRepository.save(characterRecord);
+
+        }
     }
     public void deleteCharacter(String character_name){
         characterRepository.deleteById(character_name);
