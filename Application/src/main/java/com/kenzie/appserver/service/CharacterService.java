@@ -48,6 +48,7 @@ public class CharacterService {
         characterRecord.setMana(character.getMana());
         characterRecord.setSocial(character.getSocial());
         characterRecord.setStrength(character.getStrength());
+        characterRecord.setHealthPoints(character.getHealthPoints());
         characterRepository.save(characterRecord);
         return character;
     }
