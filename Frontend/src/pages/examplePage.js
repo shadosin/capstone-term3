@@ -1,10 +1,9 @@
 import BaseClass from "../util/baseClass";
 import DataStore from "../util/DataStore";
-import ExampleClient from "../api/exampleClient";
+import CharacterClient from "../api/exampleClient";
 
 /**
- * Logic needed for the view playlist page of the website.
- */
+ * Logic needed for the view playlist page of the websit
 class ExamplePage extends BaseClass {
 
     constructor() {
