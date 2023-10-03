@@ -67,7 +67,7 @@ public class CharacterRecord {
     public void setMana(int mana) {
         this.mana = mana;
     }
-    @DynamoDBAttribute(attributeName = "healthPoints")
+
     public int getHealthPoints() {
         return healthPoints;
     }
