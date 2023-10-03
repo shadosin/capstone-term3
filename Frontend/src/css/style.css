@@ -6,7 +6,11 @@
 }
 
 .background {
-    background-color: #eaeded;
+    background-image: body {
+                            background-image: url("/Users/leannehayes/Desktop");
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                          }
     margin: 0;
     counter-reset: section;
 }
