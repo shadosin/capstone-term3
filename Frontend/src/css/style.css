@@ -3,6 +3,7 @@
     --primary-color: #00a1ff;
     --secondary-color: #fff;
     --error-color: rgba(194, 0, 0, 0.71);
+    }
 
 .background {
         background-image: url("deleteLater2.png");
@@ -11,7 +12,6 @@
         margin: 0;
         counter-reset: section;
     }
-}
 
 .header {
     /* Flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */

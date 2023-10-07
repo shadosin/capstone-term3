@@ -1,5 +1,8 @@
 import BaseClass from "../util/baseClass";
-import axios from 'axios'
+import axios from 'axios';
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:5001',
+});
 
 /**
  * Client to call the MusicPlaylistService.
@@ -47,9 +50,10 @@ export default class CharacterClient extends BaseClass {
 
     async addNewCharacter(character_name, errorCallback) {
         try {
-            const response = await this.client.post(`character`, {
+            const response = await axios.post('http://localhost:5001/character', {
                 "character_name" : character_name
             });
+            console.log(response)
             return response.data;
         } catch (error) {
             this.handleError("addNewCharacter", error, errorCallback);
@@ -64,6 +68,35 @@ export default class CharacterClient extends BaseClass {
           this.handleError("getAllCharacters", error, errorCallback);
         }
     }
+
+    async updateCharacters(character_name, strength, dexterity, magic, mana, social, healthPoints, errorCallback) {
+          try {
+              const response = await this.client.post(`character`, {
+                              "character_name" : character_name,
+                              "strength" : strength,
+                              "dexterity" : dexterity,
+                              "social" : social,
+                              "magic" : magic,
+                              "mana" : mana,
+                              "healthPoints" : healthPoints
+              });
+
+              return response.data;
+            } catch (error) {
+              this.handleError("updateCharacter", error, errorCallback);
+            }
+        }
+
+        async deleteCharacterByName(character_name, errorCallback) {
+                try {
+                    const response = await this.client.delete(`character`, {
+                        "character_name" : character_name
+                    });
+                    return null;
+                } catch (error) {
+                    this.handleError("deleteCharacterByName", error, errorCallback);
+                }
+            }
 
     /**
      * Helper method to log the error and run any error functions.
