@@ -1,122 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="characterClient.js"></script>
+    <script type="text/javascript" src="examplePage.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body class="background">
-<header class="header" id="header">
-    <div class="site-title">
-        <a class="header_home" href="index.html">Character Build and Swap</a>
+    <header class="header" id="header">
+        <div class="site-title">
+            <a class="header_home" href="index.html">Example App</a>
+        </div>
+    </header>
+    <div class="card">
+        <h2>Create Character</h2>
+        <form class="card-content" id="create-form">
+            <p class="form-field">
+                <label>Name</label>
+                <input type="text" required class="validated-field" id="create-name-field">
+            </p>
+            <button type="submit">Create</button>
+        </form>
     </div>
-</header>
-<div class="card">
-    <h2>Create Character</h2>
-    <form class="card-content" id="create-form">
-        <label for="character_name">Character Name:</label>
-        <input type="text" id="character_name" required><br>
+    <div class="card">
+        <h2>Get By Character Name</h2>
+        <form class="card-content" id="get-by-id-form">
+            <p class="form-field">
+                <label>Character Name</label>
+                <input type="text" required class="validated-field" id="id-field">
+            </p>
+            <button type="submit">Get</button>
+        </form>
+    </div>
+    <div class="card" id="result">
+        <h2>Result:</h2>
+        <p id="result-info"></p>
+    </div>
 
-        <label for="dexterity">Dexterity:</label>
-        <input type="number" id="dexterity" required><br>
-
-        <label for="magic">Magic:</label>
-        <input type="number" id="magic" required><br>
-
-        <label for="mana">Mana:</label>
-        <input type="number" id="mana" required><br>
-
-        <label for="social">Social:</label>
-        <input type="number" id="social" required><br>
-
-        <label for="strength">Strength:</label>
-        <input type="number" id="strength" required><br>
-
-        <label for="healthPoints">Health:</label>
-        <input type="number" id="healthPoints" required><br>
-
-        <input type="submit" value="Add Character">
-    </form>
-    <button onclick="addNewCharacter()">Add Character</button>
-</div>
-
-<div class="card">
-    <h2>Character List</h2>
-    <ul id="characterList"></ul>
-    <button id="reloadButton">Reload</button>
-</div>
-
-<div class="card">
-    <h2>Get By Character Name</h2>
-    <form class="card-content" id="get-by-name-form">
-        <label for="id-field">Character Name:</label>
-        <input type="text" required class="validated-field" id="id-field">
-        <button onclick="getCharacter()">Get Character</button>
-    </form>
-</div>
-
-<div class="card" id="result">
-    <h2>Result:</h2>
-    <p id="result-info"></p>
-</div>
-
-<script>
-        const createCharacterForm = document.getElementById('create-form');
-        const characterNameInput = document.getElementById('character_name');
-        const strengthInput = document.getElementById('strength');
-        const dexterityInput = document.getElementById('dexterity');
-        const socialInput = document.getElementById('social');
-        const magicInput = document.getElementById('magic');
-        const manaInput = document.getElementById('mana');
-        const healthPointsInput = document.getElementById('healthPoints');
-        const characterList = document.getElementById('characterList');
-        const reloadButton = document.getElementById('reloadButton');
-        const idField = document.getElementById('id-field');
-        const resultInfo = document.getElementById('result-info');
-
-        function addCharacterToList(character) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `Name: ${character.character_name}, Strength: ${character.strength}, Dexterity: ${character.dexterity}, Social: ${character.social}, Magic: ${character.magic}, Mana: ${character.mana}, Health Points: ${character.healthPoints}`;
-            characterList.appendChild(listItem);
-        }
-
-        async function loadCharacters() {
-            try {
-                characterList.innerHTML = '';
-                const characters = await getAllCharacters();
-                characters.forEach(addCharacterToList);
-            } catch (error) {
-                console.error('Error loading characters:', error);
-            }
-        }
-
-        createCharacterForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const characterData = {
-                character_name: characterNameInput.value,
-                strength: parseInt(strengthInput.value),
-                dexterity: parseInt(dexterityInput.value),
-                social: parseInt(socialInput.value),
-                magic: parseInt(magicInput.value),
-                mana: parseInt(manaInput.value),
-                healthPoints: parseInt(healthPointsInput.value),
-            };
-            try {
-                await addNewCharacter(characterData);
-                createCharacterForm.reset();
-                loadCharacters();
-            } catch (error) {
-                console.error('Error creating character:', error);
-            }
-        });
-
-        reloadButton.addEventListener('click', loadCharacters);
-
-        function getCharacter() {
-            const characterName = idField.value;
-            // Replace the following line with code to retrieve character by name
-            resultInfo.textContent = `Character with name "${characterName}" will be retrieved here.`;
-        }
-    </script>
 </body>
 </html>

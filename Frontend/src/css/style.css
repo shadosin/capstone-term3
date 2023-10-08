@@ -1,11 +1,13 @@
 :root {
     /* css variables: https://developer.mozilla.org/en-US/docs/Web/CSS/var */
-    --primary-color: #00a1ff;
+    --primary-color: #131921;
     --secondary-color: #fff;
     --error-color: rgba(194, 0, 0, 0.71);
+}
 
 .background {
-        background-image: url("deleteLater2.png");
+    .background {
+        background-image: url("/Users/leannehayes/kenzie/ata-lbc-project-beangel1218/Fantasy.png");
         background-size: cover;
         background-repeat: no-repeat;
         margin: 0;
@@ -24,7 +26,7 @@
 }
 
 .header_home {
-    font-size: 60px;
+    font-size: 36px;
     line-height: 40px;
     height: 100px;
     text-decoration: none;
@@ -57,7 +59,7 @@
 
 .card {
     color: var(--primary-color);
-    /*background-color: var(--secondary-color);*/
+    background-color: var(--secondary-color);
     margin: 20px;
     padding: 10px 20px;
 }
