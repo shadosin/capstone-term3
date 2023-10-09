@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import com.kenzie.appserver.service.model.Character;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testcontainers.shaded.com.google.common.base.Verify;
 
 import java.util.ArrayList;
@@ -16,15 +17,17 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CharacterServiceTest {
-
+    @Mock
     private CharacterRepository characterRepository;
     @Mock
     private  CharacterService characterService;
 
     @BeforeEach
     void setup(){
+        initMocks(CharacterServiceTest.class);
         characterRepository = mock(CharacterRepository.class);
         characterService = new CharacterService(characterRepository);
     }
@@ -107,6 +110,7 @@ public class CharacterServiceTest {
                 5,
                 6
         );
+
         //WHEN
         Character character = characterService.addNewCharacter(existingCharacter);
         //THEN
@@ -124,13 +128,21 @@ public class CharacterServiceTest {
                 6,
                 7
         );
+        CharacterRecord existingCharacter = new CharacterRecord();
+        existingCharacter.setCharacter_name("Sara");
+        existingCharacter.setStrength(2);
+        existingCharacter.setDexterity(3);
+        existingCharacter.setSocial(4);
+        existingCharacter.setMagic(5);
+        existingCharacter.setMana(6);
+        existingCharacter.setHealthPoints(7);
 
          when(characterRepository.existsById(character.getCharacter_name())).thenReturn(true);
         //WHEN
         characterService.updateCharacter(character);
 
         //THEN
-        verify((characterRepository), times(2));
+        verify(characterRepository, times(1)).save(existingCharacter);
 
     }
 }
