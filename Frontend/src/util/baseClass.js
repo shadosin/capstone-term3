@@ -7,6 +7,7 @@ export default class BaseClass {
      * @param classInstance The instance of the class to bind the methods to.
      */
     bindClassMethods(methods, classInstance) {
+        console.log(`Methods:  ${methods} bound to classInstance: ${classInstance}`)
         methods.forEach(method => {
             classInstance[method] = classInstance[method].bind(classInstance);
         });

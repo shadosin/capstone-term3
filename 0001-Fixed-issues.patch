@@ -1,0 +1,274 @@
+From 0279f6096243201cd355c537e417593b9323b2ac Mon Sep 17 00:00:00 2001
+From: John Olson <john.olson@mykenzie.snhu.edu>
+Date: Mon, 9 Oct 2023 21:30:29 -0500
+Subject: [PATCH] Fixed issues
+
+---
+ .../controller/CharacterController.java       |  2 +
+ .../model/CharacterCreateRequest.java         | 14 +++----
+ Frontend/src/api/characterClient.js           | 11 +++---
+ Frontend/src/index.html                       |  2 +-
+ Frontend/src/pages/characterPage.js           | 39 +++++++++++--------
+ Frontend/src/util/baseClass.js                |  1 +
+ Frontend/webpack.config.js                    |  4 ++
+ 7 files changed, 44 insertions(+), 29 deletions(-)
+
+diff --git a/Application/src/main/java/com/kenzie/appserver/controller/CharacterController.java b/Application/src/main/java/com/kenzie/appserver/controller/CharacterController.java
+index 501f563..f9dd4e0 100644
+--- a/Application/src/main/java/com/kenzie/appserver/controller/CharacterController.java
++++ b/Application/src/main/java/com/kenzie/appserver/controller/CharacterController.java
+@@ -18,6 +18,7 @@ import java.util.List;
+ 
+ import static java.util.UUID.randomUUID;
+ 
++@CrossOrigin
+ @RestController
+ @RequestMapping("/character")
+ public class CharacterController {
+@@ -65,6 +66,7 @@ public class CharacterController {
+ 
+     @PostMapping
+     public ResponseEntity<CharacterResponse> addNewCharacter(@RequestBody CharacterCreateRequest characterCreateRequest) {
++        System.out.printf("character name: %s\n", characterCreateRequest.getCharacter_name());
+         Character character = new Character(characterCreateRequest.getCharacter_name(),
+                 characterCreateRequest.getStrength(),
+                 characterCreateRequest.getDexterity(),
+diff --git a/Application/src/main/java/com/kenzie/appserver/controller/model/CharacterCreateRequest.java b/Application/src/main/java/com/kenzie/appserver/controller/model/CharacterCreateRequest.java
+index cd6f7f5..e4491d8 100644
+--- a/Application/src/main/java/com/kenzie/appserver/controller/model/CharacterCreateRequest.java
++++ b/Application/src/main/java/com/kenzie/appserver/controller/model/CharacterCreateRequest.java
+@@ -6,14 +6,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
+ @JsonInclude(JsonInclude.Include.NON_NULL)
+ public class CharacterCreateRequest {
+ 
++    @JsonProperty("character_name")
+     private String character_name;
++    @JsonProperty("strength")
+     private int strength;
++    @JsonProperty("dexterity")
+     private int dexterity;
++    @JsonProperty("social")
+     private int social;
++    @JsonProperty("magic")
+     private int magic;
++    @JsonProperty("mana")
+     private int mana;
++    @JsonProperty("healthPoints")
+     private int healthPoints;
+-    @JsonProperty("character_name")
+     public String getCharacter_name() {
+         return character_name;
+     }
+@@ -21,7 +27,6 @@ public class CharacterCreateRequest {
+     public void setCharacter_name(String character_name) {
+         this.character_name = character_name;
+     }
+-    @JsonProperty("strength")
+     public int getStrength() {
+         return strength;
+     }
+@@ -29,7 +34,6 @@ public class CharacterCreateRequest {
+     public void setStrength(int strength) {
+         this.strength = strength;
+     }
+-    @JsonProperty("dexterity")
+     public int getDexterity() {
+         return dexterity;
+     }
+@@ -37,7 +41,6 @@ public class CharacterCreateRequest {
+     public void setDexterity(int dexterity) {
+         this.dexterity = dexterity;
+     }
+-    @JsonProperty("social")
+     public int getSocial() {
+         return social;
+     }
+@@ -45,7 +48,6 @@ public class CharacterCreateRequest {
+     public void setSocial(int social) {
+         this.social = social;
+     }
+-    @JsonProperty("magic")
+     public int getMagic() {
+         return magic;
+     }
+@@ -53,7 +55,6 @@ public class CharacterCreateRequest {
+     public void setMagic(int magic) {
+         this.magic = magic;
+     }
+-    @JsonProperty("mana")
+     public int getMana() {
+         return mana;
+     }
+@@ -61,7 +62,6 @@ public class CharacterCreateRequest {
+     public void setMana(int mana) {
+         this.mana = mana;
+     }
+-    @JsonProperty("healthPoints")
+     public int getHealthPoints() {
+         return healthPoints;
+     }
+diff --git a/Frontend/src/api/characterClient.js b/Frontend/src/api/characterClient.js
+index 17a4c42..bdae8ca 100644
+--- a/Frontend/src/api/characterClient.js
++++ b/Frontend/src/api/characterClient.js
+@@ -16,7 +16,7 @@ export default class CharacterClient extends BaseClass {
+ 
+     constructor(props = {}){
+         super();
+-        const methodsToBind = ['clientLoaded', 'getCharacter', 'addNewCharacter', 'getAllCharacters', 'updateCharacter', 'deleteCharacterByName'];
++        const methodsToBind = ['clientLoaded', 'getCharacter', 'addNewCharacter', 'updateCharacters','getAllCharacters', 'deleteCharacterByName'];
+         this.bindClassMethods(methodsToBind, this);
+         this.props = props;
+         this.clientLoaded(axios);
+@@ -48,12 +48,13 @@ export default class CharacterClient extends BaseClass {
+         }
+     }
+ 
+-    async addNewCharacter(character_name, errorCallback) {
++    async addNewCharacter(newCharacter, errorCallback) {
+         try {
+             const response = await axios.post('http://localhost:5001/character', {
+-                "character_name" : character_name
+-            });
+-            console.log(response)
++                ...newCharacter
++            }).then(response => response.data);
++
++           console.log(response);
+             return response.data;
+         } catch (error) {
+             this.handleError("addNewCharacter", error, errorCallback);
+diff --git a/Frontend/src/index.html b/Frontend/src/index.html
+index 5c315e5..133e966 100644
+--- a/Frontend/src/index.html
++++ b/Frontend/src/index.html
+@@ -1,7 +1,6 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+-    <script type="text/javascript" src="characterPage.js"></script>
+     <link rel="stylesheet" type="text/css" href="css/style.css">
+     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+ </head>
+@@ -59,5 +58,6 @@
+     <h2>Result:</h2>
+     <p id="result-info"></p>
+ </div>
++    <script type="text/javascript" src="characterPage.js"></script>
+ </body>
+ </html>
+diff --git a/Frontend/src/pages/characterPage.js b/Frontend/src/pages/characterPage.js
+index 49e085b..3292578 100644
+--- a/Frontend/src/pages/characterPage.js
++++ b/Frontend/src/pages/characterPage.js
+@@ -2,6 +2,8 @@ import BaseClass from "../util/baseClass";
+ import DataStore from "../util/DataStore";
+ import CharacterClient from "../api/characterClient";
+ 
++
++
+ /**
+  * Logic needed for the view playlist page of the website */
+ class CharacterPage extends BaseClass {
+@@ -62,16 +64,7 @@ class CharacterPage extends BaseClass {
+     async onCreate(event) {
+         // Prevent the page from refreshing on form submit
+         event.preventDefault();
+-        this.dataStore.set({
+-            "character_name": null,
+-            "strength": null,
+-            "dexterity": null,
+-            "social": null,
+-            "magic": null,
+-            "mana": null,
+-            "healthPoints": null
+-        });
+-        console.log("this client", this.client);
++
+         let name = document.getElementById("character_name").value;
+         let strength = document.getElementById("strength").value;
+         let dexterity = document.getElementById("dexterity").value;
+@@ -81,12 +74,22 @@ class CharacterPage extends BaseClass {
+         let healthPoints = document.getElementById("healthPoints").value;
+         this.showMessage(`clicked ${name}`);
+ 
+-        const addNewCharacter = await this.client.addNewCharacter(character_name, this.errorHandler);
+-        this.dataStore.set("character_name", addNewCharacter);
++        const newCharacter = {
++            character_name: name,
++            strength: strength,
++            dexterity: dexterity,
++            social: social,
++            magic: magic,
++            mana: mana,
++            healthPoints: healthPoints
++        }
++        const addNewCharacter = await this.client.addNewCharacter(newCharacter, this.errorHandler)
++         console.log(addNewCharacter)
+ 
+-        if (true) {
+-            this.showMessage(`Created ${character.character_name}!`);
+-            this.renderCharacter();
++        console.log(this.dataStore.getState())
++        if (addNewCharacter) {
++            this.showMessage(`Created ${this.dataStore.get("character_name")}.character_name}!`);
++            await this.renderCharacter();
+         } else {
+             this.errorHandler("Error creating!  Try again...");
+         }
+@@ -99,7 +102,11 @@ class CharacterPage extends BaseClass {
+  */
+ const main = async () => {
+     const characterPage = new CharacterPage();
+-    characterPage.mount();
++   await characterPage.mount();
++    const module = characterPage
++    if (module.hot) {
++        module.hot.accept();
++    }
+ };
+ 
+ window.addEventListener('DOMContentLoaded', main);
+diff --git a/Frontend/src/util/baseClass.js b/Frontend/src/util/baseClass.js
+index 9137585..3a53fb1 100644
+--- a/Frontend/src/util/baseClass.js
++++ b/Frontend/src/util/baseClass.js
+@@ -7,6 +7,7 @@ export default class BaseClass {
+      * @param classInstance The instance of the class to bind the methods to.
+      */
+     bindClassMethods(methods, classInstance) {
++        console.log(`Methods:  ${methods} bound to classInstance: ${classInstance}`)
+         methods.forEach(method => {
+             classInstance[method] = classInstance[method].bind(classInstance);
+         });
+diff --git a/Frontend/webpack.config.js b/Frontend/webpack.config.js
+index 1fe843e..281c2cc 100644
+--- a/Frontend/webpack.config.js
++++ b/Frontend/webpack.config.js
+@@ -9,12 +9,15 @@ module.exports = {
+   },
+   entry: {
+     characterPage: path.resolve(__dirname, 'src', 'pages', 'characterPage.js'),
++    characterClient: path.resolve(__dirname, 'src', 'api', 'characterClient.js'),
++    baseClass: path.resolve(__dirname, 'src','util', 'baseClass.js')
+   },
+   output: {
+     path: path.resolve(__dirname, 'dist'),
+     filename: '[name].js',
+   },
+   devServer: {
++    hot: true,
+     https: false,
+     port: 8080,
+     open: true,
+@@ -35,6 +38,7 @@ module.exports = {
+         ]
+   },
+   plugins: [
++
+     new HtmlWebpackPlugin({
+       template: './src/index.html',
+       filename: 'index.html',
+-- 
+2.42.0.windows.2
+

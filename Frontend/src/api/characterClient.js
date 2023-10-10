@@ -16,7 +16,7 @@ export default class CharacterClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getCharacter', 'addNewCharacter', 'getAllCharacters', 'updateCharacter', 'deleteCharacterByName'];
+        const methodsToBind = ['clientLoaded', 'getCharacter', 'addNewCharacter', 'updateCharacters','getAllCharacters', 'deleteCharacterByName'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -48,12 +48,13 @@ export default class CharacterClient extends BaseClass {
         }
     }
 
-    async addNewCharacter(character_name, errorCallback) {
+    async addNewCharacter(newCharacter, errorCallback) {
         try {
             const response = await axios.post('http://localhost:5001/character', {
-                "character_name" : character_name
-            });
-            console.log(response)
+                ...newCharacter
+            }).then(response => response.data);
+
+           console.log(response);
             return response.data;
         } catch (error) {
             this.handleError("addNewCharacter", error, errorCallback);

@@ -9,12 +9,15 @@ module.exports = {
   },
   entry: {
     characterPage: path.resolve(__dirname, 'src', 'pages', 'characterPage.js'),
+    characterClient: path.resolve(__dirname, 'src', 'api', 'characterClient.js'),
+    baseClass: path.resolve(__dirname, 'src','util', 'baseClass.js')
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
   },
   devServer: {
+    hot: true,
     https: false,
     port: 8080,
     open: true,
@@ -35,6 +38,7 @@ module.exports = {
         ]
   },
   plugins: [
+
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
