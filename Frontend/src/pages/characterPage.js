@@ -2,6 +2,8 @@ import BaseClass from "../util/baseClass";
 import DataStore from "../util/DataStore";
 import CharacterClient from "../api/characterClient";
 
+
+
 /**
  * Logic needed for the view playlist page of the website */
 class CharacterPage extends BaseClass {
@@ -62,16 +64,7 @@ class CharacterPage extends BaseClass {
     async onCreate(event) {
         // Prevent the page from refreshing on form submit
         event.preventDefault();
-        this.dataStore.set({
-            "character_name": null,
-            "strength": null,
-            "dexterity": null,
-            "social": null,
-            "magic": null,
-            "mana": null,
-            "healthPoints": null
-        });
-        console.log("this client", this.client);
+
         let name = document.getElementById("character_name").value;
         let strength = document.getElementById("strength").value;
         let dexterity = document.getElementById("dexterity").value;
@@ -81,12 +74,22 @@ class CharacterPage extends BaseClass {
         let healthPoints = document.getElementById("healthPoints").value;
         this.showMessage(`clicked ${name}`);
 
-        const addNewCharacter = await this.client.addNewCharacter(character_name, this.errorHandler);
-        this.dataStore.set("character_name", addNewCharacter);
+        const newCharacter = {
+            character_name: name,
+            strength: strength,
+            dexterity: dexterity,
+            social: social,
+            magic: magic,
+            mana: mana,
+            healthPoints: healthPoints
+        }
+        const addNewCharacter = await this.client.addNewCharacter(newCharacter, this.errorHandler)
+         console.log(addNewCharacter)
 
-        if (true) {
-            this.showMessage(`Created ${character.character_name}!`);
-            this.renderCharacter();
+        console.log(this.dataStore.getState())
+        if (addNewCharacter) {
+            this.showMessage(`Created ${this.dataStore.get("character_name")}.character_name}!`);
+            await this.renderCharacter();
         } else {
             this.errorHandler("Error creating!  Try again...");
         }
@@ -99,7 +102,11 @@ class CharacterPage extends BaseClass {
  */
 const main = async () => {
     const characterPage = new CharacterPage();
-    characterPage.mount();
+   await characterPage.mount();
+    const module = characterPage
+    if (module.hot) {
+        module.hot.accept();
+    }
 };
 
 window.addEventListener('DOMContentLoaded', main);

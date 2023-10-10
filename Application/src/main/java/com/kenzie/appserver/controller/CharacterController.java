@@ -18,6 +18,7 @@ import java.util.List;
 
 import static java.util.UUID.randomUUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/character")
 public class CharacterController {
@@ -65,6 +66,7 @@ public class CharacterController {
 
     @PostMapping
     public ResponseEntity<CharacterResponse> addNewCharacter(@RequestBody CharacterCreateRequest characterCreateRequest) {
+        System.out.printf("character name: %s\n", characterCreateRequest.getCharacter_name());
         Character character = new Character(characterCreateRequest.getCharacter_name(),
                 characterCreateRequest.getStrength(),
                 characterCreateRequest.getDexterity(),
