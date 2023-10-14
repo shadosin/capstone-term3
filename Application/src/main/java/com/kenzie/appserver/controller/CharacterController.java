@@ -81,7 +81,7 @@ public class CharacterController {
         return ResponseEntity.created(URI.create("/character/" + characterResponse.getCharacter_name())).body(characterResponse);
     }
     @DeleteMapping("/{character_name}")
-    public ResponseEntity deleteCharacterByName(@PathVariable("character_name") String character_name){
+    public ResponseEntity<CharacterResponse> deleteCharacterByName(@PathVariable("character_name") String character_name){
         characterService.deleteCharacter(character_name);
         return ResponseEntity.noContent().build();
     }

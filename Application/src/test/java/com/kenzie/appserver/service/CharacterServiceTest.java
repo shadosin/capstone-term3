@@ -137,7 +137,7 @@ public class CharacterServiceTest {
         existingCharacter.setMana(6);
         existingCharacter.setHealthPoints(7);
 
-         when(characterRepository.existsById(character.getCharacter_name())).thenReturn(true);
+        when(characterRepository.existsById(character.getCharacter_name())).thenReturn(true);
         //WHEN
         characterService.updateCharacter(character);
 
