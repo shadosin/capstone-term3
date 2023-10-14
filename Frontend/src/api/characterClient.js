@@ -41,7 +41,8 @@ export default class CharacterClient extends BaseClass {
      */
     async getCharacter(character_name, errorCallback) {
         try {
-            const response = await this.client.get(`/character/${character_name}`);
+            const response = await
+            this.client.get(`/character/${character_name}`);
             return response.data;
         } catch (error) {
             this.handleError("getCharacter", error, errorCallback)
@@ -50,12 +51,12 @@ export default class CharacterClient extends BaseClass {
 
     async addNewCharacter(newCharacter, errorCallback) {
         try {
-            const response = await axios.post('http://localhost:5001/character', {
+            const response = await axios.post('/character', {
                 ...newCharacter
             }).then(response => response.data);
 
            console.log(response);
-            return response.data;
+            return response;
         } catch (error) {
             this.handleError("addNewCharacter", error, errorCallback);
         }
