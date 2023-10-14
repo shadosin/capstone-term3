@@ -10,7 +10,7 @@ class CharacterPage extends BaseClass {
 
     constructor() {
         super();
-        this.bindClassMethods(['onGet', 'onCreate', 'renderCharacter'], this);
+        this.bindClassMethods(['onGet', 'onCreate', 'renderCharacter', 'renderAllCharacters'], this);
         this.dataStore = new DataStore();
     }
 
@@ -22,7 +22,7 @@ class CharacterPage extends BaseClass {
         document.getElementById('create-form').addEventListener('submit', this.onCreate);
         this.client = new CharacterClient();
 
-        this.dataStore.addChangeListener(this.renderCharacter)
+        this.dataStore.addChangeListener(this.renderAllCharacters)
     }
 
     // Render Methods --------------------------------------------------------------------------------------------------
@@ -34,13 +34,47 @@ class CharacterPage extends BaseClass {
 
         if (character) {
             resultArea.innerHTML = `
-                <div>ID: ${character.character_name}</div>
-                <div>Name: ${character.name}</div>
+                <div>Name: ${character.character_name}</div>
+                <div>Dex: ${character.dexterity}</div>
+                <div>Magic: ${character.magic}</div>
+                <div>Mana: ${character.mana}</div>
+                <div>Social: ${character.social}</div>
+                <div>Strength: ${character.strength}</div>
+                <div>Health: ${character.healthPoints}</div>
             `
         } else {
             resultArea.innerHTML = "No Item";
         }
     }
+
+
+    async renderAllCharacters() {
+            let resultArea = document.getElementById("characterList");
+                let result = await this.client.getAllCharacters(this.errorHandler);
+                this.dataStore.set("allCharacters", result);
+
+            console.log("This should be all of the characters");
+            console.log(result);
+            if (result) {
+            let display = "";
+            for(let character of result) {
+                display += `
+                <div>
+                    <div>Name: ${character.character_name}</div>
+                    <div>Dex: ${character.dexterity}</div>
+                    <div>Magic: ${character.magic}</div>
+                    <div>Mana: ${character.mana}</div>
+                    <div>Social: ${character.social}</div>
+                    <div>Strength: ${character.strength}</div>
+                    <div>Health: ${character.healthPoints}</div>
+                    </div>
+                `
+                }
+                resultArea.innerHTML = display;
+            } else {
+                resultArea.innerHTML = "No Item";
+            }
+        }
 
     // Event Handlers --------------------------------------------------------------------------------------------------
 
@@ -54,7 +88,7 @@ class CharacterPage extends BaseClass {
         let result = await this.client.getCharacter(id, this.errorHandler);
         this.dataStore.set("character", result);
         if (result) {
-            this.showMessage(`Got ${result.name}!`);
+            this.showMessage(`Got ${result.character_name}!`);
             this.renderCharacter();
         } else {
             this.errorHandler("Error doing GET!  Try again...");
@@ -83,13 +117,14 @@ class CharacterPage extends BaseClass {
             mana: mana,
             healthPoints: healthPoints
         }
-        const addNewCharacter = await this.client.addNewCharacter(newCharacter, this.errorHandler)
-         console.log(addNewCharacter)
+        const addNewCharacter = await this.client.addNewCharacter(newCharacter, this.errorHandler);
+         //console.log(addNewCharacter);
 
-        console.log(this.dataStore.getState())
+        //console.log(this.dataStore.getState());
         if (addNewCharacter) {
-            this.showMessage(`Created ${this.dataStore.get("character_name")}.character_name}!`);
+            this.showMessage(`Created ${addNewCharacter.character_name}!`);
             await this.renderCharacter();
+            await this.renderAllCharacters();
         } else {
             this.errorHandler("Error creating!  Try again...");
         }
